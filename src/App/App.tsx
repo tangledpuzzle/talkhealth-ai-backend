@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 
 import * as faceapi from 'face-api.js';
 import Webcam from 'react-webcam';
-import Ai from './Ai';
+import Ai from '../Ai/Ai';
+import './App.css';
 
 const App = () => {
 
@@ -28,12 +29,16 @@ const App = () => {
 	}, [])
 
 	return (
-		<div className="app">
-			{/* <button>Activate</button>
-			<button>Deactivate</button> */}
-			{
-				ready ? <Ai /> : 'loading...'
-			}
-		</div>
+		<>
+			<div className='gradient'></div>
+			<div className="app">
+				<div className='emotion'>
+					emotion.ai
+				</div>
+				{
+					ready ? <Ai /> : 'loading...'
+				}
+			</div>
+		</>
 	);
 }; export default App;

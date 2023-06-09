@@ -1,0 +1,59 @@
+.app {
+    z-index: 9;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.emotion {
+    width: 480px;
+    background-color: #101010;
+    font-size: 42px;
+    font-weight: 600;
+    text-align: center;
+    /* margin-top: 80px; */
+    color: white;
+    border-top-right-radius: 18px;
+    border-top-left-radius: 18px;
+    border-bottom: 2px solid white;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.gradient {
+    z-index: -1;
+    left: 28%;
+    margin: auto;
+    --size: 350px;
+    --speed: 50s;
+    --easing: cubic-bezier(0.8, 0.2, 0.2, 0.8);
+    position: absolute;
+    width: var(--size);
+    height: var(--size);
+    filter: blur(calc(var(--size) / 5));
+    background-image: linear-gradient(hsl(158, 82, 57, 85%), hsl(252, 82, 57));
+    animation: rotate var(--speed) var(--easing) alternate infinite;
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+}
+
+@media (min-width: 720px) {
+    .gradient {
+        --size: 800px;
+    }
+}
+
+/* This is just to transition when you change the viewport size. */
+* {
+    transition: all 0.25s ease-out;
+}

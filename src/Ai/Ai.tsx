@@ -3,6 +3,8 @@ import { MutableRefObject, RefObject, useEffect, useRef, useState } from 'react'
 import * as faceapi from 'face-api.js';
 import Webcam from 'react-webcam';
 
+import './Ai.css';
+
 const Ai = () => {
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const cameraCanvas: any = useRef();
@@ -59,12 +61,13 @@ const Ai = () => {
 
     const [captureVideo, setCaptureVideo] = useState(false);
     function startCamera() {
+        setCaptureVideo(true);
         navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
             videoRef!.current!.srcObject = stream;
         }).catch((err) => {
             console.log(err)
         });
-        setCaptureVideo(true);
+        console.log('camera started')
     }
 
     function stopCamera() {
@@ -72,10 +75,6 @@ const Ai = () => {
         videoRef.current!.srcObject = null;
         setCaptureVideo(false);
         clearOverlay(cameraCanvas);
-    }
-
-    function handleOnPlay() {
-        console.log('playing', videoRef)
     }
 
     const intervalRef = useRef<any>(null)
@@ -109,19 +108,28 @@ const Ai = () => {
 	}, [captureVideo]);
 
 	return (
-		<div className="app">
+		<div className="ai">
 			
-			{
-                captureVideo ?
-                <div className="camera__wrapper">
-                    <video ref={videoRef} width="100%" height="auto" autoPlay></video>
-                    <canvas className={'webcam-overlay'} ref={cameraCanvas}></canvas>
-                </div>
-                : null
-            }
-			<div>
-				<button onClick={startCamera}>Start Camera</button>
-                <button onClick={stopCamera}>Stop Camera</button>
+			<div className='viewer'>
+                {
+                    captureVideo ?
+                    <div className="camera">
+                        {videoRef == undefined ? 'no video ref' : ''}
+                        <video ref={videoRef} width="480px" height="365px" autoPlay></video>
+                        <canvas className={'webcam-overlay'} ref={cameraCanvas}></canvas>
+                    </div>
+                    : <div className='nocamera'></div>
+                }
+            </div>
+			<div className='startstop'>
+                {
+                    !captureVideo ?
+                    <button onClick={startCamera}>start camera</button>
+                    : <button onClick={stopCamera}>stop camera</button>
+                }
+                {
+                    <button>upload file</button>
+                }
 			</div>
 		</div>
 	);
