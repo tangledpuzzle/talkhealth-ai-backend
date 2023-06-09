@@ -11,6 +11,13 @@
             position: relative;
             max-width: 480px;
 
+            .loading {
+                position: absolute;
+                top: 50%;
+                text-align: center;
+                width: 100%;
+            }
+
             video {
                 border: 3px solid #fff;
             }

@@ -10,6 +10,7 @@ const Ai = () => {
 	const cameraCanvas: any = useRef();
 
 	const [results, setResults]: any = useState([]);
+    const [loading, setLoading] = useState(false);
 	const detectFaces = async (image: HTMLVideoElement) => {
 		if (!image) {
             console.log('no image')
@@ -23,6 +24,7 @@ const Ai = () => {
 			return;
 		}
 
+
 		const faces = await faceapi
 			.detectAllFaces(image, new faceapi.TinyFaceDetectorOptions({ inputSize: 320 }))
 			.withFaceLandmarks()
@@ -32,6 +34,9 @@ const Ai = () => {
 		return faceapi.resizeResults(faces, displaySize);
 	};
 	const drawResults = async (image:any, canvas:any, results:any) => {
+        /* if (loading) {
+            setLoading(false)
+        } */
 		if (image && canvas && results) {
 			const imgSize = image.getBoundingClientRect();
 			const displaySize = { width: imgSize.width, height: imgSize.height };
@@ -48,11 +53,16 @@ const Ai = () => {
 	};
 
 	const getFaces = async () => {
+        console.log('get faces')
 		if (videoRef.current !== null && videoRef.current !== undefined) {
 			const faces = await detectFaces(videoRef.current/* .video */);
 			await drawResults(videoRef.current/* .video */, cameraCanvas.current, faces);
 			setResults(faces);
 		}
+        console.log('finished get faces')
+        if (loading) {
+            setLoading(false)
+        }
 	};
 
 	const clearOverlay = (canvas: any) => {
@@ -62,12 +72,12 @@ const Ai = () => {
     const [captureVideo, setCaptureVideo] = useState(false);
     function startCamera() {
         setCaptureVideo(true);
+        setLoading(true)
         navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
             videoRef!.current!.srcObject = stream;
         }).catch((err) => {
             console.log(err)
         });
-        console.log('camera started')
     }
 
     function stopCamera() {
@@ -80,12 +90,14 @@ const Ai = () => {
     const intervalRef = useRef<any>(null)
 	useEffect(() => {
         if (captureVideo) {
-            console.log('ping')
+            console.log('video enabled')
 
             if (videoRef !== null && videoRef !== undefined) {
-
                 intervalRef.current = setInterval(async () => {
                     await getFaces();
+                    /* if (loading) {
+                        setLoading(false)
+                    } */
                     console.log(captureVideo);
                 }, 100);
                 console.log(intervalRef.current)
@@ -114,7 +126,7 @@ const Ai = () => {
                 {
                     captureVideo ?
                     <div className="camera">
-                        {videoRef == undefined ? 'no video ref' : ''}
+                        {loading ? <div className='loading'>Loading</div> : ''}
                         <video ref={videoRef} width="480px" height="365px" autoPlay></video>
                         <canvas className={'webcam-overlay'} ref={cameraCanvas}></canvas>
                     </div>

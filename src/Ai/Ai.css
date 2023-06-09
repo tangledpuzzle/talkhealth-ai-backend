@@ -10,6 +10,12 @@
   position: relative;
   max-width: 480px;
 }
+.ai .viewer .camera .loading {
+  position: absolute;
+  top: 50%;
+  text-align: center;
+  width: 100%;
+}
 .ai .viewer .camera video {
   border: 3px solid #fff;
 }
