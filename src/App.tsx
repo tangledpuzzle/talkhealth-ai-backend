@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useRef, useState } from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import * as faceapi from 'face-api.js';
+import Webcam from 'react-webcam';
+import Ai from './Ai';
 
-export default App;
+const App = () => {
+
+	let [ready, setReady] = useState(false);
+
+	const loadModels = () => {
+		const MODEL_URL = `${process.env.PUBLIC_URL}/models`;
+
+		let p = Promise.all([
+			faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+			faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+			faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
+			faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
+			faceapi.nets.ageGenderNet.loadFromUri(MODEL_URL),
+		]);
+		return p;
+
+	};
+	useEffect(() => {
+		loadModels();
+		setReady(true);
+		console.log('models loaded')
+	}, [])
+
+	return (
+		<div className="app">
+			{/* <button>Activate</button>
+			<button>Deactivate</button> */}
+			{
+				ready ? <Ai /> : 'loading...'
+			}
+		</div>
+	);
+}; export default App;
