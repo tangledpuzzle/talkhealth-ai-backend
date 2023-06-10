@@ -1,4 +1,4 @@
-import { MutableRefObject, RefObject, useEffect, useRef, useState } from 'react';
+import { ChangeEventHandler, MutableRefObject, RefObject, useEffect, useRef, useState } from 'react';
 
 import * as faceapi from 'face-api.js';
 import Webcam from 'react-webcam';
@@ -11,7 +11,7 @@ const Ai = () => {
 
 	const [results, setResults]: any = useState([]);
     const [loading, setLoading] = useState(false);
-	const detectFaces = async (image: HTMLVideoElement) => {
+	const detectFaces = async (image: HTMLVideoElement | HTMLImageElement) => {
 		if (!image) {
             console.log('no image')
 			return;
@@ -69,22 +69,64 @@ const Ai = () => {
 		canvas.current.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
 	};
 
+    let [fileUploadProcessing, setFileUploadProcessing] = useState(false);
     const [captureVideo, setCaptureVideo] = useState(false);
     function startCamera() {
+        setFileUploadProcessing(false);
         setCaptureVideo(true);
-        setLoading(true)
+        setLoading(true);
+        setFileOk(false);
         navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
             videoRef!.current!.srcObject = stream;
         }).catch((err) => {
             console.log(err)
         });
     }
-
     function stopCamera() {
         videoRef.current!.pause();
         videoRef.current!.srcObject = null;
         setCaptureVideo(false);
         clearOverlay(cameraCanvas);
+    }
+
+    const imgCanvas: any = useRef();
+
+    function startFile() {
+        if (captureVideo) {
+            stopCamera();
+        }
+        setFileUploadProcessing(true);
+        setFileOk(false);
+    }
+    function cancelFile() {
+        setFileUploadProcessing(false);
+    }
+    let [file, setFile] = useState<any>();
+    let [fileOk, setFileOk] = useState(false);
+    async function fileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+        console.log('file upload')
+        const { files } = e.target;
+        const selectedFiles = files as FileList;
+        setFile(selectedFiles?.[0]);
+        setFileUploadProcessing(false);
+        setFileOk(true);
+
+        const img = await faceapi.bufferToImage(selectedFiles?.[0]);
+        let faces = await faceapi.detectAllFaces(img, new faceapi.TinyFaceDetectorOptions({ inputSize: 320 }))
+            .withFaceLandmarks()
+            .withFaceExpressions()
+            .withAgeAndGender();
+        
+        console.log(faces)
+        const canvas = imgCanvas.current;
+        faceapi.matchDimensions(canvas, img)
+        faces = faceapi.resizeResults(faces, img)
+        faceapi.draw.drawDetections(canvas, faces)
+        faceapi.draw.drawFaceLandmarks(canvas, faces)
+        faceapi.draw.drawFaceExpressions(canvas, faces)
+
+
+        
     }
 
     const intervalRef = useRef<any>(null)
@@ -130,7 +172,25 @@ const Ai = () => {
                         <video ref={videoRef} width="480px" height="365px" autoPlay></video>
                         <canvas className={'webcam-overlay'} ref={cameraCanvas}></canvas>
                     </div>
-                    : <div className='nocamera'></div>
+                    : (fileUploadProcessing ? 
+                        <label className="upload">
+                            <input type="file" onChange={fileUpload}/>
+                            <div className='graphic'>
+                                upload
+                                <i className="fas fa-file-upload"></i>
+                            </div>
+                        </label>
+                        :
+                        <div className='nocamera'>
+                            {
+                                fileOk ?
+                                <div className='uploaded'>
+                                    <img src={URL.createObjectURL(file)} id="create" alt="uploaded file" />
+                                    <canvas ref={imgCanvas}></canvas>
+                                </div> :
+                                ''
+                            }
+                        </div>)
                 }
             </div>
 			<div className='startstop'>
@@ -140,7 +200,9 @@ const Ai = () => {
                     : <button onClick={stopCamera}>stop camera</button>
                 }
                 {
-                    <button>upload file</button>
+                    !fileUploadProcessing ?
+                    <button onClick={startFile}>upload file</button>
+                    : <button onClick={cancelFile}>cancel upload</button>
                 }
 			</div>
 		</div>

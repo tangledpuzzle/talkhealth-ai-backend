@@ -6,10 +6,16 @@
   flex-direction: column;
   align-items: center;
 }
+.ai .viewer {
+  /* border-top: 1px solid white;
+  border-bottom: 1px solid white; */
+  height: initial;
+}
 .ai .viewer .camera {
   position: relative;
-  max-width: 480px;
-  height: initial;
+  /* max-width: 480px; */
+  height: 365px;
+  width: 486.667px;
 }
 .ai .viewer .camera .loading {
   position: absolute;
@@ -37,19 +43,63 @@
   }
 }
 .ai .viewer .camera video {
-  border: 3px solid #fff;
+  /* border: 3px solid #fff; */
+  height: 100%;
+  width: 100%;
+}
+.ai .viewer .camera canvas {
+  height: 100%;
+  width: 100%;
 }
 .ai .viewer .nocamera {
-  width: 480px;
+  width: 486.667px;
   background-color: black;
   height: 365px;
 }
+.ai .viewer .nocamera .uploaded {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+.ai .viewer .nocamera .uploaded img, .ai .viewer .nocamera .uploaded canvas {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+.ai .viewer .upload {
+  color: white;
+  width: 486.667px;
+  background-color: black;
+  height: 365px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px dashed #3aaea5;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.ai .viewer .upload input[type=file] {
+  display: none;
+}
+.ai .viewer .upload .graphic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.ai .viewer .upload .graphic i {
+  margin-top: 12px;
+  font-size: 30px;
+  color: #fff;
+}
 .ai .startstop {
-  width: 480px;
+  width: 486.667px;
   display: flex;
   justify-content: space-between;
   background-color: #101010;
-  border-top: 2px solid white;
+  /* border-top: 2px solid white; */
   border-bottom-right-radius: 18px;
   border-bottom-left-radius: 18px;
   padding-left: 20px;
