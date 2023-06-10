@@ -126,7 +126,7 @@ const Ai = () => {
                 {
                     captureVideo ?
                     <div className="camera">
-                        {loading ? <div className='loading'>Loading</div> : ''}
+                        {loading ? <div className='loading'> <div className='loader'></div> </div> : ''}
                         <video ref={videoRef} width="480px" height="365px" autoPlay></video>
                         <canvas className={'webcam-overlay'} ref={cameraCanvas}></canvas>
                     </div>
