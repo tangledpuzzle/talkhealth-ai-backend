@@ -7,6 +7,13 @@
   align-items: center;
   justify-content: center;
 }
+@media screen and (max-width: 720px) {
+  .app {
+    justify-content: initial;
+    padding-top: 80px;
+    transform: scale(0.7) !important;
+  }
+}
 
 .emotion {
   width: 486.667px;
@@ -37,7 +44,7 @@
   z-index: -1;
   left: 28%;
   margin: auto;
-  --size: 350px;
+  --size: 500px;
   --speed: 50s;
   --easing: cubic-bezier(0.8, 0.2, 0.2, 0.8);
   position: absolute;
