@@ -17,31 +17,6 @@
   height: 365px;
   width: 486.667px;
 }
-.ai .viewer .camera .loading {
-  position: absolute;
-  height: 100%;
-  text-align: center;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.ai .viewer .camera .loading .loader {
-  border: 4px solid #f3f3f3; /* Light grey */
-  border-top: 2px solid #3498db; /* Blue */
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 2s linear infinite;
-}
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
 .ai .viewer .camera video {
   /* border: 3px solid #fff; */
   height: 100%;
@@ -93,6 +68,32 @@
   margin-top: 12px;
   font-size: 30px;
   color: #fff;
+}
+.ai .viewer .loading {
+  position: absolute;
+  height: 100%;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ai .viewer .loading .loader {
+  z-index: 9;
+  border: 4px solid #f3f3f3; /* Light grey */
+  border-top: 2px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 2s linear infinite;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 .ai .startstop {
   width: 486.667px;

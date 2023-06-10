@@ -116,6 +116,7 @@ const Ai = () => {
     }
     let [file, setFile] = useState<any>();
     let [fileOk, setFileOk] = useState(false);
+    let [imgLoading, setImgLoading] = useState(false);
     async function fileUpload(e: React.ChangeEvent<HTMLInputElement>) {
         console.log('file upload')
         const { files } = e.target;
@@ -123,6 +124,7 @@ const Ai = () => {
         setFile(selectedFiles?.[0]);
         setFileUploadProcessing(false);
         setFileOk(true);
+        setImgLoading(true);
 
         const img = await faceapi.bufferToImage(selectedFiles?.[0]);
         let faces = await faceapi.detectAllFaces(img, new faceapi.TinyFaceDetectorOptions({ inputSize: 320 }))
@@ -157,8 +159,10 @@ const Ai = () => {
             drawBox.draw(canvas)
         })
 
+        setImgLoading(false);
 
 
+        
         
     }
 
@@ -218,7 +222,8 @@ const Ai = () => {
                             {
                                 fileOk ?
                                 <div className='uploaded'>
-                                    <img src={URL.createObjectURL(file)} id="create" alt="uploaded file" />
+                                    {imgLoading ? <div className='loading'> <div className='loader'></div> </div> : ''}
+                                    <img src={URL.createObjectURL(file)} id="create" alt="uploaded file" onLoad={() => console.log('hi')}/>
                                     <canvas ref={imgCanvas}></canvas>
                                 </div> :
                                 ''
