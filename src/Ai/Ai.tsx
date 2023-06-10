@@ -6,41 +6,41 @@ import Webcam from 'react-webcam';
 import './Ai.css';
 
 const Ai = () => {
-	const videoRef = useRef<HTMLVideoElement>(null);
-	const cameraCanvas = useRef<HTMLCanvasElement>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const cameraCanvas = useRef<HTMLCanvasElement>(null);
 
-	const [results, setResults] = useState<Array<any> | undefined>(undefined);
+    const [results, setResults] = useState<Array<any> | undefined>(undefined);
     const [loading, setLoading] = useState(false);
-	async function detectFaces(image: HTMLVideoElement | HTMLImageElement): Promise<Array<any>> {
-		if (!image) {
+    async function detectFaces(image: HTMLVideoElement | HTMLImageElement): Promise<Array<any>> {
+        if (!image) {
             console.log('no image')
-			return [];
-		}
+            return [];
+        }
 
-		const imgSize: DOMRect = image.getBoundingClientRect();
-		const displaySize: {width: number; height: number;} = { width: imgSize.width, height: imgSize.height };
+        const imgSize: DOMRect = image.getBoundingClientRect();
+        const displaySize: { width: number; height: number; } = { width: imgSize.width, height: imgSize.height };
 
-		if (displaySize.height === 0) {
+        if (displaySize.height === 0) {
             console.log('image size err')
-			return [];
-		}
+            return [];
+        }
 
-		const faces = await faceapi
-			.detectAllFaces(image, new faceapi.TinyFaceDetectorOptions({ inputSize: 320 }))
-			.withFaceLandmarks()
-			.withFaceExpressions()
-			.withAgeAndGender();
+        const faces = await faceapi
+            .detectAllFaces(image, new faceapi.TinyFaceDetectorOptions({ inputSize: 320 }))
+            .withFaceLandmarks()
+            .withFaceExpressions()
+            .withAgeAndGender();
 
-		return faceapi.resizeResults(faces, displaySize);
-	};
-	async function drawResults(image: HTMLVideoElement, canvas:HTMLCanvasElement, results:Array<any>): Promise<void> {
-		if (image && canvas && results) {
-			const imgSize: DOMRect = image.getBoundingClientRect();
-			const displaySize: {width: number; height: number;} = { width: imgSize.width, height: imgSize.height };
+        return faceapi.resizeResults(faces, displaySize);
+    };
+    async function drawResults(image: HTMLVideoElement, canvas: HTMLCanvasElement, results: Array<any>): Promise<void> {
+        if (image && canvas && results) {
+            const imgSize: DOMRect = image.getBoundingClientRect();
+            const displaySize: { width: number; height: number; } = { width: imgSize.width, height: imgSize.height };
 
-			faceapi.matchDimensions(canvas, displaySize);
-			canvas.getContext('2d')!.clearRect(0, 0, canvas.width, canvas.height);
-			const resizedDetections = faceapi.resizeResults(results, displaySize);
+            faceapi.matchDimensions(canvas, displaySize);
+            canvas.getContext('2d')!.clearRect(0, 0, canvas.width, canvas.height);
+            const resizedDetections = faceapi.resizeResults(results, displaySize);
             faceapi.draw.drawDetections(canvas, resizedDetections);
             faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
             faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
@@ -57,28 +57,28 @@ const Ai = () => {
                 drawBox.draw(canvas)
             })
 
-		}
+        }
         else {
             console.log('no image, canvas, or results')
         }
-	};
+    };
 
-	async function getFaces(): Promise<void> {
+    async function getFaces(): Promise<void> {
         console.log('get faces')
-		if (videoRef.current !== null && videoRef.current !== undefined) {
-			const faces: Array<any> = await detectFaces(videoRef.current/* .video */);
-			await drawResults(videoRef.current/* .video */, cameraCanvas.current!, faces);
-			setResults(faces);
-		}
+        if (videoRef.current !== null && videoRef.current !== undefined) {
+            const faces: Array<any> = await detectFaces(videoRef.current/* .video */);
+            await drawResults(videoRef.current/* .video */, cameraCanvas.current!, faces);
+            setResults(faces);
+        }
         console.log('finished get faces')
         if (loading) {
             setLoading(false)
         }
-	};
+    };
 
-	const clearOverlay = (canvas: any) => {
-		canvas.current.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-	};
+    const clearOverlay = (canvas: any) => {
+        canvas.current.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+    };
 
     let [isCameraOn, setIsCameraOn] = useState<boolean>(false);
     let [fileUploadProcessing, setFileUploadProcessing] = useState<boolean>(false);
@@ -102,11 +102,13 @@ const Ai = () => {
         setCaptureVideo(false);
         clearOverlay(cameraCanvas);
         setIsCameraOn(false);
+        setResults(undefined);
     }
 
     const imgCanvas: any = useRef();
 
     function startFile() {
+        setResults(undefined);
         if (captureVideo) {
             stopCamera();
         }
@@ -117,6 +119,7 @@ const Ai = () => {
     function cancelFile() {
         setFileUploadProcessing(false);
         setIsCameraOn(false);
+        setResults(undefined);
     }
     let [file, setFile] = useState<any>();
     let [fileOk, setFileOk] = useState<boolean>(false);
@@ -136,7 +139,7 @@ const Ai = () => {
             .withFaceLandmarks()
             .withFaceExpressions()
             .withAgeAndGender()
-        
+
         console.log(faces)
 
         if (faces.length === 0) {
@@ -167,12 +170,12 @@ const Ai = () => {
         setImgLoading(false);
 
 
-        
-        
+
+
     }
 
     const intervalRef = useRef<any>(null)
-	useEffect(() => {
+    useEffect(() => {
         if (captureVideo) {
             console.log('video enabled')
 
@@ -201,69 +204,83 @@ const Ai = () => {
             intervalRef.current = null;
         }
 
-	}, [captureVideo]);
+    }, [captureVideo]);
 
-	return (
-		<div className="ai">
-			
-			<div className='viewer'>
+    return (
+        <div className="ai">
+
+            <div className='viewer'>
                 {
                     captureVideo ?
-                    <div className="camera">
-                        {loading ? <div className='loading'> <div className='loader'></div> </div> : ''}
-                        <video ref={videoRef} width="480px" height="365px" autoPlay></video>
-                        <canvas className={'webcam-overlay'} ref={cameraCanvas}></canvas>
-                    </div>
-                    : (fileUploadProcessing ? 
-                        <label className="upload">
-                            <input type="file" onChange={fileUpload}/>
-                            <div className='graphic'>
-                                upload
-                                <i className="fas fa-file-upload"></i>
-                            </div>
-                        </label>
-                        :
-                        <div className='nocamera'>
-                            {
-                                fileOk ?
-                                <div className='uploaded'>
-                                    {imgLoading ? <div className='loading'> <div className='loader'></div> </div> : ''}
-                                    <img src={URL.createObjectURL(file)} id="create" alt="uploaded file" onLoad={() => console.log('hi')}/>
-                                    <canvas ref={imgCanvas}></canvas>
-                                </div> :
-                                ''
-                            }
-                        </div>)
+                        <div className="camera">
+                            {loading ? <div className='loading'> <div className='loader'></div> </div> : ''}
+                            <video ref={videoRef} width="480px" height="365px" autoPlay></video>
+                            <canvas className={'webcam-overlay'} ref={cameraCanvas}></canvas>
+                        </div>
+                        : (fileUploadProcessing ?
+                            <label className="upload">
+                                <input type="file" onChange={fileUpload} />
+                                <div className='graphic'>
+                                    upload
+                                    <i className="fas fa-file-upload"></i>
+                                </div>
+                            </label>
+                            :
+                            <div className='nocamera'>
+                                {
+                                    fileOk ?
+                                        <div className='uploaded'>
+                                            {imgLoading ? <div className='loading'> <div className='loader'></div> </div> : ''}
+                                            <img src={URL.createObjectURL(file)} id="create" alt="uploaded file" onLoad={() => console.log('hi')} />
+                                            <canvas ref={imgCanvas}></canvas>
+                                        </div> :
+                                        ''
+                                }
+                            </div>)
                 }
             </div>
-			<div className='startstop'>
+            <div className='startstop'>
                 {
                     !captureVideo ?
-                    <button onClick={startCamera}>start camera</button>
-                    : <button onClick={stopCamera}>stop camera</button>
+                        <button onClick={startCamera}>start camera</button>
+                        : <button onClick={stopCamera}>stop camera</button>
                 }
                 {
                     <div className='details'>
                         <div>
                             {
-                                results == undefined && captureVideo ? 'ai loading' : (
-                                    results?.length === 0 && captureVideo ? 'no faces detected' : ''
+                                results == undefined && captureVideo ? <div className='orange'><span></span>loading models</div> 
+                                : (
+                                    results == undefined ?
+                                        <div className='red'><span></span>ai offline</div>
+                                        : (
+                                            results.length > 0 ?
+                                                <div className='green'><span></span>face found</div>
+                                                : <div className='red'><span></span>no face found</div>
+                                        )
                                 )
                             }
                         </div>
                         <div>
                             {
-                                captureVideo && !isCameraOn ? 'camera loading' : ''
+                                captureVideo ? (
+                                    !isCameraOn ?
+                                        <div className='orange'><span></span>camera loading</div>
+                                        : 
+                                        <div className='green'><span></span>camera online</div>
+                                    ) 
+                                    : 
+                                    <div className='red'><span></span>camera offline</div>
                             }
                         </div>
                     </div>
                 }
                 {
                     !fileUploadProcessing ?
-                    <button onClick={startFile}>upload file</button>
-                    : <button onClick={cancelFile}>cancel upload</button>
+                        <button onClick={startFile}>upload file</button>
+                        : <button onClick={cancelFile}>cancel upload</button>
                 }
-			</div>
-		</div>
-	);
+            </div>
+        </div>
+    );
 }; export default Ai;

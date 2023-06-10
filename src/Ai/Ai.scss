@@ -99,6 +99,7 @@
         color: white;
         width: 486.667px;
         display: flex;
+        height: 60px;
         justify-content: space-between;
         background-color: #101010;
         /* border-top: 2px solid white; */
@@ -109,8 +110,37 @@
         .details {
             display: flex;
             flex-direction: column;
+            justify-content: center;
+            /* align-items: center; */
+
+            .green, .red, .orange {
+                span {
+                    border-radius: 50%;
+                    height: 10px;
+                    width: 10px;
+                    display: inline-block;
+                    margin-right: 6px;
+                    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+                }
+            }
+            .green {
+                span {
+                    background-color: #00ff00;
+                }
+            }
+            .red {
+                span {
+                    background-color: #ff0000;
+                }
+            }
+            .orange {
+                span {
+                    background-color: #ff9900;
+                }
+            }
         }
         button {
+            width: 120px;
             color: white;
             background-color: #101010;
             border: none;
