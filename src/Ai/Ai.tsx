@@ -46,6 +46,19 @@ const Ai = () => {
             faceapi.draw.drawDetections(canvas, resizedDetections);
             faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
             faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+
+            resizedDetections.forEach((face: any) => {
+
+                const box = face.detection.box
+                const drawBox = new faceapi.draw.DrawBox(
+                    box,
+                    {
+                        label: Math.round(face.age) + " year old " + face.gender
+                    }
+                )
+                drawBox.draw(canvas)
+            })
+
 		}
         else {
             console.log('no image, canvas, or results')
@@ -115,15 +128,35 @@ const Ai = () => {
         let faces = await faceapi.detectAllFaces(img, new faceapi.TinyFaceDetectorOptions({ inputSize: 320 }))
             .withFaceLandmarks()
             .withFaceExpressions()
-            .withAgeAndGender();
+            .withAgeAndGender()
         
         console.log(faces)
+
+        if (faces.length === 0) {
+            console.log('no faces')
+            return;
+        }
+
         const canvas = imgCanvas.current;
         faceapi.matchDimensions(canvas, img)
         faces = faceapi.resizeResults(faces, img)
         faceapi.draw.drawDetections(canvas, faces)
         faceapi.draw.drawFaceLandmarks(canvas, faces)
         faceapi.draw.drawFaceExpressions(canvas, faces)
+
+        //draw gender and age
+        faces.forEach((face: any) => {
+
+            const box = face.detection.box
+            const drawBox = new faceapi.draw.DrawBox(
+                box,
+                {
+                    label: Math.round(face.age) + " year old " + face.gender
+                }
+            )
+            drawBox.draw(canvas)
+        })
+
 
 
         
