@@ -7,23 +7,23 @@ import './Ai.css';
 
 const Ai = () => {
 	const videoRef = useRef<HTMLVideoElement>(null);
-	const cameraCanvas: any = useRef();
+	const cameraCanvas = useRef<HTMLCanvasElement>(null);
 
-	const [results, setResults]: any = useState([]);
+	const [results, setResults] = useState<Array<any> | undefined>([]);
     const [loading, setLoading] = useState(false);
-	const detectFaces = async (image: HTMLVideoElement | HTMLImageElement) => {
+	async function detectFaces(image: HTMLVideoElement | HTMLImageElement): Promise<Array<any>> {
 		if (!image) {
             console.log('no image')
-			return;
+			return [];
 		}
 
-		const imgSize = image.getBoundingClientRect();
-		const displaySize = { width: imgSize.width, height: imgSize.height };
+		const imgSize: DOMRect = image.getBoundingClientRect();
+		const displaySize: {width: number; height: number;} = { width: imgSize.width, height: imgSize.height };
+
 		if (displaySize.height === 0) {
             console.log('image size err')
-			return;
+			return [];
 		}
-
 
 		const faces = await faceapi
 			.detectAllFaces(image, new faceapi.TinyFaceDetectorOptions({ inputSize: 320 }))
@@ -33,15 +33,13 @@ const Ai = () => {
 
 		return faceapi.resizeResults(faces, displaySize);
 	};
-	const drawResults = async (image:any, canvas:any, results:any) => {
-        /* if (loading) {
-            setLoading(false)
-        } */
+	async function drawResults(image: HTMLVideoElement, canvas:HTMLCanvasElement, results:Array<any>): Promise<void> {
 		if (image && canvas && results) {
-			const imgSize = image.getBoundingClientRect();
-			const displaySize = { width: imgSize.width, height: imgSize.height };
+			const imgSize: DOMRect = image.getBoundingClientRect();
+			const displaySize: {width: number; height: number;} = { width: imgSize.width, height: imgSize.height };
+
 			faceapi.matchDimensions(canvas, displaySize);
-			canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+			canvas.getContext('2d')!.clearRect(0, 0, canvas.width, canvas.height);
 			const resizedDetections = faceapi.resizeResults(results, displaySize);
             faceapi.draw.drawDetections(canvas, resizedDetections);
             faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
@@ -65,11 +63,11 @@ const Ai = () => {
         }
 	};
 
-	const getFaces = async () => {
+	async function getFaces(): Promise<void> {
         console.log('get faces')
 		if (videoRef.current !== null && videoRef.current !== undefined) {
-			const faces = await detectFaces(videoRef.current/* .video */);
-			await drawResults(videoRef.current/* .video */, cameraCanvas.current, faces);
+			const faces: Array<any> = await detectFaces(videoRef.current/* .video */);
+			await drawResults(videoRef.current/* .video */, cameraCanvas.current!, faces);
 			setResults(faces);
 		}
         console.log('finished get faces')
@@ -82,8 +80,8 @@ const Ai = () => {
 		canvas.current.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
 	};
 
-    let [fileUploadProcessing, setFileUploadProcessing] = useState(false);
-    const [captureVideo, setCaptureVideo] = useState(false);
+    let [fileUploadProcessing, setFileUploadProcessing] = useState<boolean>(false);
+    const [captureVideo, setCaptureVideo] = useState<boolean>(false);
     function startCamera() {
         setFileUploadProcessing(false);
         setCaptureVideo(true);
@@ -115,18 +113,18 @@ const Ai = () => {
         setFileUploadProcessing(false);
     }
     let [file, setFile] = useState<any>();
-    let [fileOk, setFileOk] = useState(false);
-    let [imgLoading, setImgLoading] = useState(false);
+    let [fileOk, setFileOk] = useState<boolean>(false);
+    let [imgLoading, setImgLoading] = useState<boolean>(false);
     async function fileUpload(e: React.ChangeEvent<HTMLInputElement>) {
         console.log('file upload')
         const { files } = e.target;
-        const selectedFiles = files as FileList;
+        const selectedFiles: FileList = files as FileList;
         setFile(selectedFiles?.[0]);
         setFileUploadProcessing(false);
         setFileOk(true);
         setImgLoading(true);
 
-        const img = await faceapi.bufferToImage(selectedFiles?.[0]);
+        const img: HTMLImageElement = await faceapi.bufferToImage(selectedFiles?.[0]);
         let faces = await faceapi.detectAllFaces(img, new faceapi.TinyFaceDetectorOptions({ inputSize: 320 }))
             .withFaceLandmarks()
             .withFaceExpressions()
