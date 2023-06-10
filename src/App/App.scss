@@ -15,6 +15,18 @@
         transform: scale(0.7) !important;
     }
 
+    .credits {
+        position: absolute;
+        bottom: 50px;
+        display: flex;
+        align-items: center;
+        color: white;
+        a {
+            color: white;
+            text-decoration: underline;
+        }
+    }
+
 }
 
 .emotion {

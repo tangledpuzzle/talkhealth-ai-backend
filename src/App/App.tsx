@@ -70,6 +70,10 @@ const App = () => {
 				{
 					ready ? <Ai gradientCallback={handleGradient}/> : 'loading...'
 				}
+				<div className='credits'>
+					<span>@s-alad&nbsp;|&nbsp;</span> 
+					<a href=''>github</a>
+				</div>
 			</div>
 		</>
 	);
