@@ -5,7 +5,11 @@ import Webcam from 'react-webcam';
 
 import './Ai.css';
 
-const Ai = () => {
+interface AiProps {
+    gradientCallback: Function;
+}
+
+function Ai( { gradientCallback }: AiProps) {
     const videoRef = useRef<HTMLVideoElement>(null);
     const cameraCanvas = useRef<HTMLCanvasElement>(null);
 
@@ -69,6 +73,9 @@ const Ai = () => {
             const faces: Array<any> = await detectFaces(videoRef.current/* .video */);
             await drawResults(videoRef.current/* .video */, cameraCanvas.current!, faces);
             setResults(faces);
+            if (faces.length > 0) {
+                gradientCallback(faces);
+            }
         }
         console.log('finished get faces')
         if (loading) {
@@ -78,6 +85,7 @@ const Ai = () => {
 
     const clearOverlay = (canvas: any) => {
         canvas.current.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+        gradientCallback(undefined);
     };
 
     let [isCameraOn, setIsCameraOn] = useState<boolean>(false);
@@ -144,7 +152,10 @@ const Ai = () => {
 
         if (faces.length === 0) {
             console.log('no faces')
+            gradientCallback(undefined);
             return;
+        } else {
+            gradientCallback(faces);
         }
 
         const canvas = imgCanvas.current;

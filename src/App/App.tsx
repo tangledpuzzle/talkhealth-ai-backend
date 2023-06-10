@@ -28,15 +28,47 @@ const App = () => {
 		console.log('models loaded')
 	}, [])
 
+	let emotions = [
+		'neutral',
+		'happy',
+		'sad',
+		'angry',
+		'fearful',
+		'disgusted',
+		'surprised'
+	]
+
+	let [currentEmotion, setCurrentEmotion] = useState<string>('neutral');
+	let [hasResult, setHasResult] = useState<boolean>(false);
+
+	function handleGradient(results: any) {
+
+		if (results === undefined) {
+			setHasResult(false);
+			return;
+		} else {
+			setHasResult(true);
+		}
+
+		console.log(results)
+		let expressions = results[0].expressions;
+		console.log(expressions)
+		let emotion = Object.keys(expressions).reduce((a, b) => expressions[a] > expressions[b] ? a : b);
+		console.log(emotion)
+		setCurrentEmotion(emotion);
+	}
+
 	return (
 		<>
-			<div className='gradient'></div>
+			<div className={`gradient t ${currentEmotion as string}`}></div>
 			<div className="app">
 				<div className='emotion'>
-					emotion.ai
+					{
+						hasResult ? currentEmotion : 'emotion ai'
+					}
 				</div>
 				{
-					ready ? <Ai /> : 'loading...'
+					ready ? <Ai gradientCallback={handleGradient}/> : 'loading...'
 				}
 			</div>
 		</>

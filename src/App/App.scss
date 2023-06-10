@@ -46,9 +46,36 @@
     width: var(--size);
     height: var(--size);
     filter: blur(calc(var(--size) / 5));
-    background-image: linear-gradient(hsl(158, 82, 57, 85%), hsl(252, 82, 57));
+    /* background-image: linear-gradient(hsl(158, 82, 57, 85%), hsl(252, 82, 57)); */
     animation: rotate var(--speed) var(--easing) alternate infinite;
     border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    transition: .2s ease-in-out;
+}
+.t {
+    transition: .2s ease-in-out;
+}
+.neutral {
+    background-image: linear-gradient(hsl(158, 82, 57, 85%), hsl(252, 82, 57));
+}
+.happy {
+    background-image: linear-gradient(hsl(356, 91%, 91%, 85%), hsl(63, 100%, 96%, 85%));
+}
+.sad {
+    background-image: linear-gradient(hsl(249, 100%, 44%, 85%), hsla(238, 51%, 14%, 0.85));
+}
+.angry {
+    //convert #af0c17 to hsl
+    background-image: linear-gradient(hsl(356, 87%, 37%, 85%), hsl(23, 100%, 59%, 85%));
+}
+.disgusted {
+    background-image: linear-gradient( 	hsl(166, 68%, 43%, 85%),  	hsl(42, 43%, 70%, 85%));
+}
+.fearful {
+    background-image: linear-gradient( 	hsl(202, 96%, 9%, 85%),  	hsl(236, 17%, 51%, 85%));
+
+}
+.surprised {
+    background-image: linear-gradient( 	hsl(13, 100%, 92%, 85%), hsl(24, 93%, 55%, 85%));
 }
 
 @media (min-width: 720px) {
