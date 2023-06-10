@@ -7,12 +7,12 @@ import './App.css';
 
 const App = () => {
 
-	let [ready, setReady] = useState(false);
+	let [ready, setReady] = useState<boolean>(false);
 
 	const loadModels = () => {
 		const MODEL_URL = `${process.env.PUBLIC_URL}/models`;
 
-		let p = Promise.all([
+		let p: Promise<Array<any>> = Promise.all([
 			faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
 			faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
 			faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),

@@ -9,7 +9,7 @@ const Ai = () => {
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const cameraCanvas = useRef<HTMLCanvasElement>(null);
 
-	const [results, setResults] = useState<Array<any> | undefined>([]);
+	const [results, setResults] = useState<Array<any> | undefined>(undefined);
     const [loading, setLoading] = useState(false);
 	async function detectFaces(image: HTMLVideoElement | HTMLImageElement): Promise<Array<any>> {
 		if (!image) {
@@ -80,6 +80,7 @@ const Ai = () => {
 		canvas.current.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
 	};
 
+    let [isCameraOn, setIsCameraOn] = useState<boolean>(false);
     let [fileUploadProcessing, setFileUploadProcessing] = useState<boolean>(false);
     const [captureVideo, setCaptureVideo] = useState<boolean>(false);
     function startCamera() {
@@ -89,6 +90,8 @@ const Ai = () => {
         setFileOk(false);
         navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
             videoRef!.current!.srcObject = stream;
+            console.log('video starting')
+            setIsCameraOn(true);
         }).catch((err) => {
             console.log(err)
         });
@@ -98,6 +101,7 @@ const Ai = () => {
         videoRef.current!.srcObject = null;
         setCaptureVideo(false);
         clearOverlay(cameraCanvas);
+        setIsCameraOn(false);
     }
 
     const imgCanvas: any = useRef();
@@ -108,9 +112,11 @@ const Ai = () => {
         }
         setFileUploadProcessing(true);
         setFileOk(false);
+        setIsCameraOn(false);
     }
     function cancelFile() {
         setFileUploadProcessing(false);
+        setIsCameraOn(false);
     }
     let [file, setFile] = useState<any>();
     let [fileOk, setFileOk] = useState<boolean>(false);
@@ -123,6 +129,7 @@ const Ai = () => {
         setFileUploadProcessing(false);
         setFileOk(true);
         setImgLoading(true);
+        setIsCameraOn(false);
 
         const img: HTMLImageElement = await faceapi.bufferToImage(selectedFiles?.[0]);
         let faces = await faceapi.detectAllFaces(img, new faceapi.TinyFaceDetectorOptions({ inputSize: 320 }))
@@ -234,6 +241,22 @@ const Ai = () => {
                     !captureVideo ?
                     <button onClick={startCamera}>start camera</button>
                     : <button onClick={stopCamera}>stop camera</button>
+                }
+                {
+                    <div className='details'>
+                        <div>
+                            {
+                                results == undefined && captureVideo ? 'ai loading' : (
+                                    results?.length === 0 && captureVideo ? 'no faces detected' : ''
+                                )
+                            }
+                        </div>
+                        <div>
+                            {
+                                captureVideo && !isCameraOn ? 'camera loading' : ''
+                            }
+                        </div>
+                    </div>
                 }
                 {
                     !fileUploadProcessing ?
