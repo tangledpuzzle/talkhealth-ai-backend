@@ -1,0 +1,65 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+.chat-container {
+    max-width: 90%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+    overflow: auto; /* Added to contain floated children */
+}
+.message {
+    margin: 5px 0;
+    padding: 15px;
+    border-radius: 20px;
+    position: relative;
+    max-width: 80%; /* Limit message width */
+    box-sizing: border-box;
+    word-wrap: break-word;
+}
+.assistant-message {
+    background-color: #007bff;
+    color: white;
+    text-align: left;
+    float: left; /* Align assistant messages to the left */
+    clear: both; /* Clear float from previous elements */
+}
+.user-message {
+    background-color: #e8e8e8;
+    text-align: right;
+    float: right; /* Align user messages to the right */
+    clear: both; /* Clear float from previous elements */
+}
+.message img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+.assistant-message::before {
+    /* Adjusted for speech bubble effect */
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: -8px; /* Position adjustment */
+    top: 24px;
+    border: 10px solid;
+    border-color: transparent #007bff transparent transparent;
+}
+.user-message::after {
+    /* Adjusted for speech bubble effect */
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    right: -8px; /* Position adjustment */
+    top: 24px;
+    border: 10px solid;
+    border-color: transparent transparent transparent #e8e8e8;
+}

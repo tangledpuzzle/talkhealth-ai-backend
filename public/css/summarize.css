@@ -1,0 +1,85 @@
+html, body {
+    height: 100%; /* Sets the minimum height of the body to be the full viewport height */
+    margin: 0; /* Resets default margin */
+}
+
+body {
+    display: flex; /* Sets the display mode to flex */
+    flex-direction: column; /* Orders the flex items in a column */
+    font-family: 'Roboto', sans-serif;
+    background-color: white;
+}
+
+.content {
+    flex: 1; /* This makes the content flex and grow to take available space */
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 100px;
+}
+
+.document-header {
+    background-color: #F4F9FF;
+    padding: 2em;
+    color: #57A3BC;
+    display: flex;
+    align-items: center;
+    text-align: justify;
+}
+
+.logo-container {
+    flex: 1;
+    padding: 1em;
+    background: white;
+    border-radius: 12px;
+}
+
+.document-logo {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.header-info {
+    flex: 3;
+    padding-left: 12em;
+}
+
+.header-info h1 {
+    font-size: 2em;
+    margin-bottom: 0.5em;
+}
+
+.header-info p {
+    font-size: 1.2em;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.document-body {
+    padding: 2em;
+}
+
+.body-info {
+    margin-bottom: 4em;
+}
+
+.document-footer {
+    flex-shrink: 0; /* Prevents the footer from shrinking */
+    background-color: #212131;
+    color: white;
+    padding: 2em;
+    display: flex;
+    justify-content: space-between;
+}
+
+.footer-info, .footer-disclaimer {
+    flex: 1;
+}
+
+.website-link {
+    display: block; /* Makes link take its own line */
+    padding: 0.2em 0;
+}
+
+.footer-disclaimer {
+    font-size: 0.8em;
+}

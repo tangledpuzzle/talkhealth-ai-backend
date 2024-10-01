@@ -1,0 +1,28 @@
+# OPENAI
+OPENAI_API_KEY = ''
+CHAT_MODEL = 'gpt-4-0125-preview'
+EMBEDDING_MODEL = 'text-embedding-3-large'
+
+# PINECONE
+PINECONE_API_KEY = ""
+PINECONE_INDEX = ""
+
+# FEEDBACK
+SENDER_EMAIL = ""
+RECEIVER_EMAIL = ""
+APP_PASSWORD = ""
+
+# LOGO
+LOGOFILE = ""
+
+# MONGODB
+MONGO_URL = "mongodb+srv://:@cluster0.foajmas.mongodb.net/"
+
+# AWS
+AWS_REGION="us-east-2"
+AWS_ACCESS_KEY_ID=""
+AWS_SECRET_ACCESS_KEY=""
+
+# SECRET
+SECRET_HASH_KEY = ""
+SECRET_IV = ""
